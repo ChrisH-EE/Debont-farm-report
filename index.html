@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>甘南农机作业档案分析</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --surface: #ffffff;
+      --ink: #1c1a16;
+      --muted: #6b655c;
+      --line: #e4dfd4;
+      --accent: #1f6b4a;
+      --accent-soft: #e8f3ed;
+      --warn: #9a5b12;
+      --warn-soft: #f8efdf;
+      --info: #1e4f7a;
+      --info-soft: #e8f0f7;
+      --ok: #1f6b4a;
+      --ok-soft: #e8f3ed;
+      --radius: 14px;
+      --pad: 16px;
+      --max: 720px;
+      --shadow: 0 1px 0 rgba(28, 26, 22, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+        "Noto Sans SC", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 20px var(--pad) 48px;
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      line-height: 1.25;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin: 28px 0 10px;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: 1rem;
+      margin: 0 0 6px;
+    }
+    p { margin: 0 0 10px; }
+    .meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+    }
+    .caption {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin: 6px 0 0;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      box-shadow: var(--shadow);
+    }
+    .stat .v {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .stat .l {
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+    .stat.ok .v { color: var(--ok); }
+
+    .ops {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+    .card .title {
+      font-weight: 650;
+      margin-bottom: 4px;
+    }
+    .card .sub {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .callout {
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 14px 0;
+      border: 1px solid var(--line);
+    }
+    .callout.info {
+      background: var(--info-soft);
+      border-color: #c9dae9;
+    }
+    .callout.note {
+      background: #f0eee8;
+      border-color: var(--line);
+    }
+    .callout .t {
+      font-weight: 650;
+      margin-bottom: 4px;
+    }
+
+    .chart-wrap {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 8px 8px;
+      margin: 10px 0;
+      height: 240px;
+    }
+
+    .pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 4px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .pill.info { background: var(--info-soft); color: var(--info); }
+    .pill.warn { background: var(--warn-soft); color: var(--warn); }
+    .pill.ok { background: var(--ok-soft); color: var(--ok); }
+    .arrow { color: var(--muted); }
+
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin: 10px 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 560px;
+      font-size: 0.84rem;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      background: #faf8f4;
+      font-weight: 650;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.hi td { background: #f3faf6; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .rules {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .rule {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .rule b { font-weight: 650; }
+    .rule .detail {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-top: 4px;
+    }
+
+    .foot {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (min-width: 560px) {
+      .stats { grid-template-columns: repeat(4, 1fr); }
+      .ops { grid-template-columns: repeat(2, 1fr); }
+      .pair { grid-template-columns: 1fr 1fr; }
+      h1 { font-size: 1.75rem; }
+      .page { padding-top: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>甘南农机作业档案：数据说明了什么</h1>
+    <p class="meta">
+      数据来源：Archieve/ 矢量文件 · 共 5,802 条 GPS 作业记录 ·
+      2025-04-25 至 2025-11-19 · WGS84 折线轨迹
+    </p>
+
+    <div class="stats">
+      <div class="stat"><div class="v">5,802</div><div class="l">作业次数</div></div>
+      <div class="stat"><div class="v">20</div><div class="l">设备数</div></div>
+      <div class="stat"><div class="v">11</div><div class="l">机手数</div></div>
+      <div class="stat"><div class="v">14</div><div class="l">乡镇数</div></div>
+    </div>
+
+    <div class="ops">
+      <div class="card">
+        <div class="title">播种</div>
+        <div>1,786 次 · 24,845 亩</div>
+        <div class="sub">4月25日–6月9日 · 幅宽约 2.5 米</div>
+      </div>
+      <div class="card">
+        <div class="title">植保</div>
+        <div>457 次 · 39,677 亩</div>
+        <div class="sub">6月1日–7月22日 · 喷幅约 12 米</div>
+      </div>
+      <div class="card">
+        <div class="title">深松</div>
+        <div>1,126 次 · 17,126 亩</div>
+        <div class="sub">6月7日–7月16日 · 幅宽约 3.5 米</div>
+      </div>
+      <div class="card">
+        <div class="title">收获</div>
+        <div>2,433 次 · 48,941 亩</div>
+        <div class="sub">9月26日–11月19日 · 割台约 4.2 米</div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="t">核心结论</div>
+      这是黑龙江省甘南县一个生长季的农机作业日志，主体为金丰公社服务机队，另有保农农场。
+      每条记录是带机手、设备、面积、机具幅宽的 GPS 轨迹，不是地块权属图。
+      最强信号是「按季节衔接的作业流水线」，而不是彼此独立的随机事件。
+    </div>
+
+    <h2>季节作业流水线（观测顺序）</h2>
+    <p class="meta" style="margin-bottom:0">按月统计作业次数。各环节几乎不跨季重叠，形成链条。</p>
+    <div class="chart-wrap"><canvas id="chartJobs"></canvas></div>
+    <p class="caption">来源：Archieve 矢量数据 · 2025 年各月作业次数</p>
+
+    <div class="chart-wrap"><canvas id="chartArea"></canvas></div>
+    <p class="caption">按月汇总作业面积（亩）。植保因喷幅宽，单次覆盖面积更大。</p>
+
+    <div class="pipeline">
+      <span class="pill info">1. 播种 4–5月</span>
+      <span class="arrow">→</span>
+      <span class="pill warn">2. 植保 + 深松 6–7月</span>
+      <span class="arrow">→</span>
+      <span class="pill ok">3. 收获 9–11月</span>
+    </div>
+
+    <h2>数据支持的「若…则…」规则</h2>
+    <p class="meta">以下为带时间/空间结构的观测关联，不是实验室因果；但对这支机队仍有预测价值。</p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>若（条件）</th>
+            <th>则（结果）</th>
+            <th>强度</th>
+            <th>依据</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hi">
+            <td>某乡镇有播种</td>
+            <td>该乡镇也有收获</td>
+            <td>100%</td>
+            <td>有播种的 10/10 个乡镇都有收获，乡镇级作物周期完整。</td>
+          </tr>
+          <tr class="hi">
+            <td>某设备完成播种</td>
+            <td>约 144 天后同一设备开始收获</td>
+            <td>14/14 台</td>
+            <td>末次播种→首次收获平均间隔 144 天，且间隔始终为正；机手姓名一致。</td>
+          </tr>
+          <tr class="hi">
+            <td>某设备做过播种</td>
+            <td>同一设备常在播种后做季中深松（而非播前）</td>
+            <td>15/15 台</td>
+            <td>所有深松设备都做过播种；深松在 6–7 月，晚于 4–5 月播种。不是播前整地。</td>
+          </tr>
+          <tr class="hi">
+            <td>某设备做过播种</td>
+            <td>约 76% 播种作业附近有同设备收获轨迹（约 1 公里内）</td>
+            <td>855/1128</td>
+            <td>同一机器的播种与收获轨迹在空间上邻近。</td>
+          </tr>
+          <tr>
+            <td>已知设备编号</td>
+            <td>对应唯一机手姓名</td>
+            <td>20/20</td>
+            <td>设备与机手严格 1:1。张志坚名下有 10 台设备（机队账号特征）。</td>
+          </tr>
+          <tr>
+            <td>作业类型为植保</td>
+            <td>幅宽约 7.8–23.4 米（喷杆），均值 12.3 米</td>
+            <td>机具分型</td>
+            <td>幅宽可作机具指纹：播种 1.3–4.4 米，深松约 3.25 米，收获 3.25–5.85 米，喷杆约 13 米。</td>
+          </tr>
+          <tr>
+            <td>GPS 轨迹更长（点数更多）</td>
+            <td>面积 AREA 更大</td>
+            <td>r=0.86–0.96</td>
+            <td>面积由轨迹长度 × 机具幅宽推导，不是独立的地籍亩数。</td>
+          </tr>
+          <tr>
+            <td>某乡镇只有收获</td>
+            <td>更像跨区/代收，本档案中无本地播种</td>
+            <td>4 个乡镇</td>
+            <td>大河湾镇、汉古尔河镇、莽格吐达斡尔族乡、长山乡仅有收获——机具外出收割服务。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>意外发现：深松发生在播种之后</h2>
+    <div class="pair">
+      <div class="card">
+        <div class="title">常见预期</div>
+        <p style="margin:0">深松应在播种前（整地）。顺序应为：深松 → 播种。</p>
+      </div>
+      <div class="card">
+        <div class="title">数据实际表现</div>
+        <p style="margin:0">
+          在所有同时有两种作业的设备上，播种多在 5 月结束，深松则在 6–7 月进行。
+          因此这里的深松是季中中耕/出苗后深松，而非播前深翻。
+        </p>
+      </div>
+    </div>
+
+    <h2>设备 ↔ 机手绑定</h2>
+    <div class="stats">
+      <div class="stat ok"><div class="v">1:1</div><div class="l">设备 → 机手</div></div>
+      <div class="stat"><div class="v">10</div><div class="l">张志坚名下设备</div></div>
+      <div class="stat"><div class="v">18/20</div><div class="l">跨多种作业的设备</div></div>
+      <div class="stat"><div class="v">2</div><div class="l">仅播种、未出现收获</div></div>
+    </div>
+    <p class="meta">
+      规则：知道设备编号就能确定机手。多数机器跑完整季链条；有 2 台仅出现在播种中。
+    </p>
+
+    <h2>乡镇作业完整度</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>地点</th>
+            <th class="num">播种</th>
+            <th class="num">深松</th>
+            <th class="num">植保</th>
+            <th class="num">收获</th>
+            <th class="num">收/播比</th>
+            <th>模式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>中兴乡</td><td class="num">7976</td><td class="num">5043</td><td class="num">24644</td><td class="num">14530</td><td class="num">1.82</td><td>全流程</td></tr>
+          <tr><td>宝山乡</td><td class="num">6965</td><td class="num">1669</td><td class="num">11353</td><td class="num">13241</td><td class="num">1.90</td><td>全流程</td></tr>
+          <tr><td>平阳镇</td><td class="num">4089</td><td class="num">2994</td><td class="num">—</td><td class="num">6047</td><td class="num">1.48</td><td>无植保</td></tr>
+          <tr><td>兴隆乡</td><td class="num">1724</td><td class="num">3917</td><td class="num">1285</td><td class="num">5822</td><td class="num">3.38</td><td>全流程</td></tr>
+          <tr><td>甘南镇</td><td class="num">2037</td><td class="num">2469</td><td class="num">1847</td><td class="num">1105</td><td class="num">0.54</td><td>全流程</td></tr>
+          <tr><td>兴十四镇</td><td class="num">1831</td><td class="num">754</td><td class="num">—</td><td class="num">3336</td><td class="num">1.82</td><td>无植保</td></tr>
+          <tr><td>汉古尔河镇</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1076</td><td class="num">—</td><td>仅收获</td></tr>
+          <tr><td>莽格吐达斡尔族乡</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1503</td><td class="num">—</td><td>仅收获</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">面积单位：亩。中兴/宝山/兴隆/甘南等核心乡镇跑全流程；部分乡镇仅为代收目的地。</p>
+
+    <h2>面积与幅宽实际含义</h2>
+    <div class="pair">
+      <div class="card">
+        <h3>面积 ≈ 轨迹长度 × 幅宽</h3>
+        <p style="margin:0">
+          各作业类型中，面积与 GPS 点数相关系数为 0.86–0.96；幅宽与面积相关较弱。
+          因此面积是由折线轨迹与机具幅宽推导的作业覆盖量，不是独立的地籍登记亩数。
+        </p>
+      </div>
+      <div class="card">
+        <h3>幅宽 ≈ 机具类型</h3>
+        <p style="margin:0">
+          离散档位明显：播种机 1.3 / 1.95 / 2.6 / 4.4 米；深松多为 3.25 米；
+          收获机 3.25 / 3.9 / 4.55 / 5.85 米；喷雾 7.8–23.4 米。知道幅宽就能强预测作业类型。
+        </p>
+      </div>
+    </div>
+
+    <h2>实用「若 → 则」速查</h2>
+    <div class="rules">
+      <div class="rule"><b>若</b> 月份在 4–5 月 → <b>则</b> 作业几乎一定是播种。</div>
+      <div class="rule"><b>若</b> 月份在 6–7 月 → <b>则</b> 作业为植保或深松。</div>
+      <div class="rule"><b>若</b> 月份在 9–11 月 → <b>则</b> 作业为收获。</div>
+      <div class="rule"><b>若</b> 幅宽 ≥ 7.8 米 → <b>则</b> 作业为植保。</div>
+      <div class="rule"><b>若</b> 乡镇有播种 → <b>则</b> 该乡镇有收获（本档案中概率 = 1.0）。</div>
+      <div class="rule"><b>若</b> 设备春季播过种 → <b>则</b> 约 5 个月后同一设备/机手收获（14/14）。</div>
+      <div class="rule"><b>若</b> 乡镇仅有收获 → <b>则</b> 视为代收/跨区服务，而非本数据集中的本地全周期种植。</div>
+    </div>
+
+    <div class="callout note">
+      <div class="t">注意事项</div>
+      在共有设备上，收获上报面积约为播种面积的 2.4 倍。可能原因包括：档案中播种覆盖不全、计量规则不同、多次收获通行，或收割了未在本档案播种的地块。
+      空间匹配约 76%，但不是地块一一对应——我们只有轨迹中心点，没有地块编号。
+    </div>
+
+    <p class="foot">
+      组织：齐齐哈尔农垦金丰公社农业服务有限公司甘南分公司（主体）+ 甘南县保农种植家庭农场 ·
+      基于 Archieve/*.shp 分析
+    </p>
+  </main>
+
+  <script>
+    const months = ["4月", "5月", "6月", "7月", "9月", "10月", "11月"];
+    const colors = {
+      播种: "#1f6b4a",
+      植保: "#1e4f7a",
+      深松: "#9a5b12",
+      收获: "#6b3fa0",
+    };
+
+    const common = {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: { boxWidth: 10, boxHeight: 10, padding: 12, font: { size: 11 } },
+        },
+        tooltip: {
+          titleFont: { size: 12 },
+          bodyFont: { size: 12 },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 11 }, color: "#6b655c" },
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: "#ece7dc" },
+          ticks: { font: { size: 11 }, color: "#6b655c" },
+        },
+      },
+    };
+
+    new Chart(document.getElementById("chartJobs"), {
+      type: "bar",
+      data: {
+        labels: months,
+        datasets: [
+          { label: "播种", data: [161, 1610, 15, 0, 0, 0, 0], backgroundColor: colors.播种 },
+          { label: "植保", data: [0, 0, 407, 50, 0, 0, 0], backgroundColor: colors.植保 },
+          { label: "深松", data: [0, 0, 1063, 63, 0, 0, 0], backgroundColor: colors.深松 },
+          { label: "收获", data: [0, 0, 0, 0, 45, 1478, 910], backgroundColor: colors.收获 },
+        ],
+      },
+      options: {
+        ...common,
+        plugins: {
+          ...common.plugins,
+          title: { display: true, text: "各月作业次数", font: { size: 13 }, color: "#1c1a16", padding: { bottom: 8 } },
+        },
+        scales: {
+          ...common.scales,
+          y: { ...common.scales.y, title: { display: true, text: "次数", font: { size: 11 }, color: "#6b655c" } },
+          x: { ...common.scales.x, title: { display: true, text: "月份", font: { size: 11 }, color: "#6b655c" } },
+        },
+      },
+    });
+
+    new Chart(document.getElementById("chartArea"), {
+      type: "bar",
+      data: {
+        labels: months,
+        datasets: [
+          { label: "播种面积", data: [2161, 22503, 181, 0, 0, 0, 0], backgroundColor: colors.播种 },
+          { label: "植保面积", data: [0, 0, 28839, 10839, 0, 0, 0], backgroundColor: colors.植保 },
+          { label: "深松面积", data: [0, 0, 14866, 2260, 0, 0, 0], backgroundColor: colors.深松 },
+          { label: "收获面积", data: [0, 0, 0, 0, 1784, 32902, 14255], backgroundColor: colors.收获 },
+        ],
+      },
+      options: {
+        ...common,
+        plugins: {
+          ...common.plugins,
+          title: { display: true, text: "各月作业面积（亩）", font: { size: 13 }, color: "#1c1a16", padding: { bottom: 8 } },
+        },
+        scales: {
+          ...common.scales,
+          y: { ...common.scales.y, title: { display: true, text: "亩", font: { size: 11 }, color: "#6b655c" } },
+          x: { ...common.scales.x, title: { display: true, text: "月份", font: { size: 11 }, color: "#6b655c" } },
+        },
+      },
+    });
+  </script>
+</body>
+</html>
