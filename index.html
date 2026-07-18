@@ -303,6 +303,7 @@
       <a href="#time">时间链条</a>
       <a href="#space">空间共现</a>
       <a href="#id">身份结构</a>
+      <a href="#deeper2">负荷与空窗</a>
       <a href="#quick">速查</a>
     </nav>
 
@@ -593,6 +594,79 @@
     </div>
     <p class="caption">面积单位：亩。核心乡镇跑全流程；部分乡镇仅为代收目的地。</p>
 
+    <h2 id="deeper2">更深发现二：负荷集中、空窗期与组织分工</h2>
+    <p class="meta" style="margin-bottom:0">
+      在季节流水线与幅宽指纹之外，逐条重算轨迹后浮现的三类更深模式：作业量高度集中在少数设备、
+      生长期存在一段完全静默的空窗、以及两家组织在作业结构与人员绑定上的系统性差异。
+    </p>
+
+    <div class="callout warn">
+      <div class="t">意外：56 天完全静默的生长期空窗</div>
+      逐日统计 5,802 条记录后，<b>8月1日至9月25日（连续 56 天）没有任何一条作业记录</b>——
+      横跨全部四类作业、全部 20 台设备。这正是深松/植保收尾（约7月22日）到收获开始（9月26日）
+      之间的作物生长期：档案系统在这段窗口里完全「沉默」，说明数据只记录机具下地作业，不含巡田等其他活动。
+    </div>
+
+    <div class="contrast">
+      <div class="box hi">
+        <div class="big">40%</div>
+        <div class="lbl">面积份额来自面积最高的 3 台设备（占 20 台的 15%）</div>
+      </div>
+      <div class="box hi">
+        <div class="big">54%</div>
+        <div class="lbl">面积份额来自面积最高的 5 台设备（占 20 台的 25%）</div>
+      </div>
+    </div>
+    <p class="caption">按设备汇总全年（四类作业合计）面积后排序。作业量并非 20 台平均分摊，头部设备承担了机队的主要负荷。</p>
+
+    <h3>组织作业结构对比</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>组织</th><th class="num">播种占比</th><th class="num">收获占比</th><th class="num">植保占比</th><th class="num">深松占比</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi"><td>齐齐哈尔农垦金丰公社（甘南分公司）</td><td class="num">19.2%</td><td class="num">35.8%</td><td class="num">32.4%</td><td class="num">12.6%</td></tr>
+          <tr class="hi"><td>甘南县保农种植家庭农场</td><td class="num">17.8%</td><td class="num">49.1%</td><td class="num">16.7%</td><td class="num">16.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">占比按各组织全年作业面积计算。金丰公社的植保面积占比约为保农农场的两倍；保农农场近半面积集中在收获，更偏代耕代收型服务。</p>
+
+    <h3>乡镇标签的空间语义：服务片区 vs 代收点</h3>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>乡镇</th><th class="num">经度跨度</th><th class="num">纬度跨度</th><th>角色</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi"><td>中兴乡</td><td class="num">31.7 km</td><td class="num">23.4 km</td><td>全流程核心区（多地块拼合）</td></tr>
+          <tr class="hi"><td>宝山乡</td><td class="num">17.5 km</td><td class="num">27.1 km</td><td>全流程核心区</td></tr>
+          <tr class="hi"><td>甘南镇</td><td class="num">18.5 km</td><td class="num">18.6 km</td><td>全流程核心区</td></tr>
+          <tr><td>汉古尔河镇</td><td class="num">5.9 km</td><td class="num">3.4 km</td><td>纯收获代收点</td></tr>
+          <tr><td>长山乡</td><td class="num">5.7 km</td><td class="num">2.9 km</td><td>纯收获代收点</td></tr>
+          <tr><td>大河湾镇</td><td class="num">2.6 km</td><td class="num">2.7 km</td><td>纯收获代收点</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">
+      中兴乡的轨迹跨度达 31.7×23.4 公里，远超单个行政村范围，说明 VILLAGE 字段实际是「服务片区」标签，
+      而非精确地块行政边界；相比之下纯收获乡镇的轨迹高度收拢在几公里内，符合单点代收特征。
+    </p>
+
+    <h3>设备生命周期：常驻机队 vs 临时机具</h3>
+    <p style="margin:0 0 6px">按首末作业日期跨度看，20 台设备明显分两类。</p>
+    <div class="rules">
+      <div class="rule">
+        18 台设备跨季作业 <span class="detail">活跃跨度 139–205 天，覆盖播种到收获的多个环节，是机队主力</span>
+      </div>
+      <div class="rule">
+        2 台设备仅短暂出现（均属张志坚名下） <span class="detail">
+        010901060723：5月1日–16日（15天），仅播种；010901060724：5月16日–17日（1天），仅播种，此后再未出现——
+        符合播种高峰期临时调入/租赁机具的特征</span>
+      </div>
+    </div>
+
     <h2>面积与幅宽实际含义</h2>
     <div class="pair">
       <div class="card">
@@ -627,6 +701,12 @@
       <div class="rule"><b>若</b> 机手不是张志坚 → <b>则</b> 整季只绑定一台设备。</div>
       <div class="rule"><b>若</b> 同设备收/播面积比 &gt; 3 → <b>则</b> 视为外向型代收为主。</div>
       <div class="rule"><b>若</b> 乡镇仅有收获 → <b>则</b> 视为代收/跨区服务目的地。</div>
+      <div class="rule"><b>若</b> 日期落在 8 月1日–9月25日 → <b>则</b> 档案中无任何作业记录（56天生长期空窗）。</div>
+      <div class="rule"><b>若</b> 设备属于全季面积前 5 名（共20台）→ <b>则</b> 这 5 台合计完成全季 54% 的作业面积。</div>
+      <div class="rule"><b>若</b> 组织为金丰公社 → <b>则</b> 植保面积占比≈32%，约为保农农场（17%）的两倍。</div>
+      <div class="rule"><b>若</b> 同设备同作业类型 → <b>则</b> 幅宽整季几乎恒定（54/56 组仅一个档位）。</div>
+      <div class="rule"><b>若</b> 机手确定 → <b>则</b> 所属组织唯一，两家组织人员互不交叉（11人 11机构，0 交叉）。</div>
+      <div class="rule"><b>若</b> 乡镇轨迹跨度仅几公里 → <b>则</b> 多为纯收获代收点；跨度达十余到三十余公里 → 为多地块拼合的全流程服务片区。</div>
     </div>
 
     <div class="callout note">
@@ -638,7 +718,7 @@
 
     <p class="foot">
       组织：齐齐哈尔农垦金丰公社农业服务有限公司甘南分公司（主体）+ 甘南县保农种植家庭农场 ·
-      基于 Archieve/*.shp 分析 · 含深层若则规则更新
+      基于 Archieve/*.shp 逐条轨迹重算 · 含空窗期、负荷集中度、组织分工等第二轮深层若则规则更新
     </p>
   </main>
 
