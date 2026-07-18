@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="light" />
-  <title>甘南农机作业档案分析</title>
+  <meta name="description" content="甘南农机作业档案双语分析 / Bilingual analysis of Gannan farm machinery GPS logs" />
+  <title>甘南农机作业档案分析 · Gannan Farm Ops Analysis</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -13,8 +14,6 @@
       --ink: #1c1a16;
       --muted: #6b655c;
       --line: #e4dfd4;
-      --accent: #1f6b4a;
-      --accent-soft: #e8f3ed;
       --warn: #9a5b12;
       --warn-soft: #f8efdf;
       --info: #1e4f7a;
@@ -46,21 +45,41 @@
     }
 
     h1 {
-      font-size: 1.55rem;
-      line-height: 1.25;
-      margin: 0 0 8px;
+      font-size: 1.45rem;
+      line-height: 1.3;
+      margin: 0 0 6px;
       letter-spacing: -0.02em;
     }
     h2 {
-      font-size: 1.15rem;
-      margin: 28px 0 10px;
+      font-size: 1.1rem;
+      margin: 28px 0 8px;
       letter-spacing: -0.01em;
+      line-height: 1.35;
     }
     h3 {
-      font-size: 1rem;
+      font-size: 0.98rem;
       margin: 0 0 6px;
+      line-height: 1.35;
     }
     p { margin: 0 0 10px; }
+
+    .en {
+      display: block;
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 0.82em;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+    .en-inline {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 0.88em;
+    }
+    th .en, td .en, .stat .en, .pill .en, .toc .en {
+      font-size: 0.78em;
+    }
+
     .meta {
       color: var(--muted);
       font-size: 0.88rem;
@@ -81,10 +100,11 @@
     .toc a {
       color: var(--info);
       text-decoration: none;
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       background: var(--info-soft);
       padding: 6px 10px;
       border-radius: 999px;
+      line-height: 1.25;
     }
 
     .stats {
@@ -109,6 +129,7 @@
       color: var(--muted);
       font-size: 0.8rem;
       margin-top: 4px;
+      line-height: 1.3;
     }
     .stat.ok .v { color: var(--ok); }
 
@@ -128,6 +149,7 @@
     .card .title {
       font-weight: 650;
       margin-bottom: 4px;
+      line-height: 1.3;
     }
     .card .sub {
       color: var(--muted);
@@ -140,25 +162,14 @@
       margin: 14px 0;
       border: 1px solid var(--line);
     }
-    .callout.info {
-      background: var(--info-soft);
-      border-color: #c9dae9;
-    }
-    .callout.ok {
-      background: var(--ok-soft);
-      border-color: #c5dfd0;
-    }
-    .callout.note {
-      background: #f0eee8;
-      border-color: var(--line);
-    }
-    .callout.warn {
-      background: var(--warn-soft);
-      border-color: #edd9b8;
-    }
+    .callout.info { background: var(--info-soft); border-color: #c9dae9; }
+    .callout.ok { background: var(--ok-soft); border-color: #c5dfd0; }
+    .callout.note { background: #f0eee8; border-color: var(--line); }
+    .callout.warn { background: var(--warn-soft); border-color: #edd9b8; }
     .callout .t {
       font-weight: 650;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      line-height: 1.35;
     }
 
     .chart-wrap {
@@ -167,7 +178,7 @@
       border-radius: var(--radius);
       padding: 12px 8px 8px;
       margin: 10px 0;
-      height: 240px;
+      height: 260px;
     }
 
     .pipeline {
@@ -181,9 +192,9 @@
       display: inline-block;
       padding: 7px 11px;
       border-radius: 999px;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      white-space: nowrap;
+      line-height: 1.25;
     }
     .pill.info { background: var(--info-soft); color: var(--info); }
     .pill.warn { background: var(--warn-soft); color: var(--warn); }
@@ -201,25 +212,26 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 520px;
-      font-size: 0.84rem;
+      min-width: 560px;
+      font-size: 0.82rem;
     }
     th, td {
-      padding: 10px 12px;
+      padding: 10px 11px;
       text-align: left;
       border-bottom: 1px solid var(--line);
       vertical-align: top;
+      white-space: normal;
+      line-height: 1.35;
     }
     th {
       background: #faf8f4;
       font-weight: 650;
-      white-space: nowrap;
       position: sticky;
       top: 0;
     }
     tr:last-child td { border-bottom: none; }
     tr.hi td { background: #f3faf6; }
-    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
     .pair {
       display: grid;
@@ -237,6 +249,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 12px 14px;
+      line-height: 1.45;
     }
     .rule b { font-weight: 650; }
     .rule .detail {
@@ -267,8 +280,9 @@
     .contrast .box.lo .big { color: var(--warn); }
     .contrast .box .lbl {
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       margin-top: 4px;
+      line-height: 1.35;
     }
 
     .foot {
@@ -277,458 +291,623 @@
       margin-top: 28px;
       padding-top: 14px;
       border-top: 1px solid var(--line);
+      line-height: 1.45;
     }
 
     @media (min-width: 560px) {
       .stats { grid-template-columns: repeat(4, 1fr); }
       .ops { grid-template-columns: repeat(2, 1fr); }
       .pair { grid-template-columns: 1fr 1fr; }
-      h1 { font-size: 1.75rem; }
+      h1 { font-size: 1.65rem; }
       .page { padding-top: 28px; }
     }
   </style>
 </head>
 <body>
   <main class="page">
-    <h1>甘南农机作业档案：数据说明了什么</h1>
+    <h1>
+      甘南农机作业档案：数据说明了什么
+      <span class="en">Gannan Farm Ops Archive: What the Data Shows</span>
+    </h1>
     <p class="meta">
-      数据来源：Archieve/ 矢量文件 · 共 5,802 条 GPS 作业记录 ·
-      2025-04-25 至 2025-11-19 · WGS84 折线轨迹
+      数据来源：Archieve/ 矢量文件 · 共 5,802 条 GPS 作业记录 · 2025-04-25 至 2025-11-19 · WGS84 折线轨迹
+      <span class="en">Source: Archieve/ shapefiles · 5,802 GPS work jobs · Apr 25 – Nov 19, 2025 · WGS84 polylines</span>
     </p>
 
-    <nav class="toc" aria-label="目录">
-      <a href="#season">季节流水线</a>
-      <a href="#deepest">最深发现</a>
-      <a href="#width">幅宽判别</a>
-      <a href="#time">时间链条</a>
-      <a href="#space">空间共现</a>
-      <a href="#id">身份结构</a>
-      <a href="#deeper2">负荷与空窗</a>
-      <a href="#quick">速查</a>
+    <nav class="toc" aria-label="目录 / Table of contents">
+      <a href="#season">季节流水线<span class="en">Season pipeline</span></a>
+      <a href="#deepest">最深发现<span class="en">Deepest finding</span></a>
+      <a href="#width">幅宽判别<span class="en">Width classifier</span></a>
+      <a href="#time">时间链条<span class="en">Time chains</span></a>
+      <a href="#space">空间共现<span class="en">Spatial co-occurrence</span></a>
+      <a href="#id">身份结构<span class="en">Identity</span></a>
+      <a href="#towns">乡镇完整度<span class="en">Town coverage</span></a>
+      <a href="#deeper2">负荷与空窗<span class="en">Load &amp; silent window</span></a>
+      <a href="#quick">速查<span class="en">Quick rules</span></a>
     </nav>
 
     <div class="stats">
-      <div class="stat"><div class="v">5,802</div><div class="l">作业次数</div></div>
-      <div class="stat"><div class="v">20</div><div class="l">设备数</div></div>
-      <div class="stat"><div class="v">11</div><div class="l">机手数</div></div>
-      <div class="stat"><div class="v">14</div><div class="l">乡镇数</div></div>
+      <div class="stat"><div class="v">5,802</div><div class="l">作业次数<span class="en">Jobs</span></div></div>
+      <div class="stat"><div class="v">20</div><div class="l">设备数<span class="en">Devices</span></div></div>
+      <div class="stat"><div class="v">11</div><div class="l">机手数<span class="en">Operators</span></div></div>
+      <div class="stat"><div class="v">14</div><div class="l">乡镇数<span class="en">Towns / villages</span></div></div>
     </div>
 
     <div class="ops">
       <div class="card">
-        <div class="title">播种</div>
-        <div>1,786 次 · 24,845 亩</div>
-        <div class="sub">4月25日–6月9日 · 幅宽约 2.5 米</div>
+        <div class="title">播种 <span class="en-inline">/ Seeding</span></div>
+        <div>1,786 次 · 24,845 亩<span class="en">1,786 jobs · 24,845 mu</span></div>
+        <div class="sub">4月25日–6月9日 · 幅宽约 2.5 米<span class="en">Apr 25 – Jun 9 · width ~2.5 m</span></div>
       </div>
       <div class="card">
-        <div class="title">植保</div>
-        <div>457 次 · 39,677 亩</div>
-        <div class="sub">6月1日–7月22日 · 喷幅约 12 米</div>
+        <div class="title">植保 <span class="en-inline">/ Plant protection</span></div>
+        <div>457 次 · 39,677 亩<span class="en">457 jobs · 39,677 mu</span></div>
+        <div class="sub">6月1日–7月22日 · 喷幅约 12 米<span class="en">Jun 1 – Jul 22 · boom ~12 m</span></div>
       </div>
       <div class="card">
-        <div class="title">深松</div>
-        <div>1,126 次 · 17,126 亩</div>
-        <div class="sub">6月7日–7月16日 · 幅宽约 3.5 米</div>
+        <div class="title">深松 <span class="en-inline">/ Deep tillage</span></div>
+        <div>1,126 次 · 17,126 亩<span class="en">1,126 jobs · 17,126 mu</span></div>
+        <div class="sub">6月7日–7月16日 · 幅宽约 3.5 米<span class="en">Jun 7 – Jul 16 · width ~3.5 m</span></div>
       </div>
       <div class="card">
-        <div class="title">收获</div>
-        <div>2,433 次 · 48,941 亩</div>
-        <div class="sub">9月26日–11月19日 · 割台约 4.2 米</div>
+        <div class="title">收获 <span class="en-inline">/ Harvest</span></div>
+        <div>2,433 次 · 48,941 亩<span class="en">2,433 jobs · 48,941 mu</span></div>
+        <div class="sub">9月26日–11月19日 · 割台约 4.2 米<span class="en">Sep 26 – Nov 19 · header ~4.2 m</span></div>
       </div>
     </div>
 
     <div class="callout info">
-      <div class="t">核心结论</div>
+      <div class="t">核心结论 <span class="en-inline">/ Core takeaway</span></div>
       这是黑龙江省甘南县一个生长季的农机作业日志，主体为金丰公社服务机队，另有保农农场。
       每条记录是带机手、设备、面积、机具幅宽的 GPS 轨迹，不是地块权属图。
       除季节流水线外，更深层的信号是：<b>季中管护（深松/植保）强烈预测同地收获覆盖</b>，以及
       <b>幅宽几乎可唯一判定作业类型</b>。
+      <span class="en">One growing-season machinery log for Gannan County, Heilongjiang — mainly the Jinfeng Commune service fleet plus Baonong Farm. Each record is a GPS track with operator, device, area, and implement width — not a parcel cadastre. Beyond the seasonal pipeline, deeper signals are: <b>mid-season care (deep tillage / plant protection) strongly predicts local harvest coverage</b>, and <b>WIDTH nearly uniquely classifies operation type</b>.</span>
     </div>
 
-    <h2 id="season">季节作业流水线（观测顺序）</h2>
-    <p class="meta" style="margin-bottom:0">按月统计作业次数。各环节几乎不跨季重叠，形成链条。</p>
+    <h2 id="season">
+      季节作业流水线（观测顺序）
+      <span class="en">Seasonal ops pipeline (observed order)</span>
+    </h2>
+    <p class="meta" style="margin-bottom:0">
+      按月统计作业次数。各环节几乎不跨季重叠，形成链条。
+      <span class="en">Job counts by month. Ops barely overlap seasons — they form a chain.</span>
+    </p>
     <div class="chart-wrap"><canvas id="chartJobs"></canvas></div>
-    <p class="caption">来源：Archieve 矢量数据 · 2025 年各月作业次数</p>
+    <p class="caption">来源：Archieve 矢量数据 · 2025 年各月作业次数<span class="en">Source: Archieve shapefiles · monthly job counts, 2025</span></p>
 
     <div class="chart-wrap"><canvas id="chartArea"></canvas></div>
-    <p class="caption">按月汇总作业面积（亩）。植保因喷幅宽，单次覆盖面积更大。</p>
+    <p class="caption">按月汇总作业面积（亩）。植保因喷幅宽，单次覆盖面积更大。<span class="en">Monthly area sum (mu). Plant protection covers large area quickly (wide boom).</span></p>
 
     <div class="pipeline">
-      <span class="pill info">1. 播种 4–5月</span>
+      <span class="pill info">1. 播种 4–5月<span class="en">Seeding Apr–May</span></span>
       <span class="arrow">→</span>
-      <span class="pill warn">2. 植保 + 深松 6–7月</span>
+      <span class="pill warn">2. 植保 + 深松 6–7月<span class="en">Spray + deep till Jun–Jul</span></span>
       <span class="arrow">→</span>
-      <span class="pill ok">3. 收获 9–11月</span>
+      <span class="pill ok">3. 收获 9–11月<span class="en">Harvest Sep–Nov</span></span>
     </div>
 
-    <h2 id="deepest">最深发现：季中管护 → 收获覆盖</h2>
+    <h2 id="deepest">
+      最深发现：季中管护 → 收获覆盖
+      <span class="en">Deepest finding: mid-season care → harvest coverage</span>
+    </h2>
     <div class="callout ok">
-      <div class="t">若…则…（约 1 公里网格）</div>
+      <div class="t">若…则…（约 1 公里网格） <span class="en-inline">/ If…then… (~1 km cells)</span></div>
       若网格内既有播种又有深松，则同网格出现收获的概率约 <b>90%</b>；
       若只有播种、没有深松，概率仅约 <b>43%</b>。
       植保同理：播种+植保 ≈ <b>94%</b>，仅播种无植保 ≈ <b>64%</b>。
+      <span class="en">If a cell has both seeding and deep tillage, P(harvest in same cell) ≈ <b>90%</b>; seeding alone without deep tillage ≈ <b>43%</b>. Same for plant protection: seeding+spray ≈ <b>94%</b> vs seeding without spray ≈ <b>64%</b>.</span>
     </div>
 
     <div class="contrast">
       <div class="box hi">
         <div class="big">90%</div>
-        <div class="lbl">播种+深松 → 有收获</div>
+        <div class="lbl">播种+深松 → 有收获<span class="en">Seed+deep → harvest</span></div>
       </div>
       <div class="box lo">
         <div class="big">43%</div>
-        <div class="lbl">仅播种无深松 → 有收获</div>
+        <div class="lbl">仅播种无深松 → 有收获<span class="en">Seed only (no deep) → harvest</span></div>
       </div>
       <div class="box hi">
         <div class="big">94%</div>
-        <div class="lbl">播种+植保 → 有收获</div>
+        <div class="lbl">播种+植保 → 有收获<span class="en">Seed+spray → harvest</span></div>
       </div>
       <div class="box lo">
         <div class="big">64%</div>
-        <div class="lbl">仅播种无植保 → 有收获</div>
+        <div class="lbl">仅播种无植保 → 有收获<span class="en">Seed only (no spray) → harvest</span></div>
       </div>
     </div>
 
     <div class="pair">
       <div class="card">
-        <div class="title">正向：管护抬高收获共现</div>
-        <p style="margin:0">已播条带若再做季中深松/植保，远更可能被同一档案记录到收获。</p>
+        <div class="title">正向：管护抬高收获共现<span class="en">Forward: care lifts harvest co-occurrence</span></div>
+        <p style="margin:0">
+          已播条带若再做季中深松/植保，远更可能被同一档案记录到收获。
+          <span class="en">Seeded strips that also receive mid-season deep tillage / spray are far more likely to show harvest in the same archive.</span>
+        </p>
       </div>
       <div class="card">
-        <div class="title">反向：更强</div>
+        <div class="title">反向：更强<span class="en">Reverse: even stronger</span></div>
         <p style="margin:0">
           若网格有深松 → 约 90% 已有播种；有植保 → 约 91% 已有播种。
           季中作业几乎不会落在从未播种的条带上。
+          <span class="en">If a cell has deep tillage → ~90% already has seeding; plant protection → ~91%. Mid-season work almost never lands on never-seeded strips.</span>
         </p>
       </div>
     </div>
-    <p class="caption">网格边长约 0.01 度（≈1 公里）。这比乡镇级「有播种必有收获」更细、信息量更大。</p>
+    <p class="caption">网格边长约 0.01 度（≈1 公里）。这比乡镇级「有播种必有收获」更细、信息量更大。<span class="en">Cell size ~0.01° (≈1 km). Finer and more informative than town-level “seed ⇒ harvest”.</span></p>
 
-    <h2 id="width">幅宽：几乎确定性的作业分类器</h2>
-    <p class="meta">WIDTH 是机具指纹。下列档位在本档案中可近乎唯一判定作业类型。</p>
+    <h2 id="width">
+      幅宽：几乎确定性的作业分类器
+      <span class="en">WIDTH: nearly deterministic op classifier</span>
+    </h2>
+    <p class="meta">
+      WIDTH 是机具指纹。下列档位在本档案中可近乎唯一判定作业类型。
+      <span class="en">WIDTH is an implement fingerprint. These bins nearly uniquely determine op type in this archive.</span>
+    </p>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>若（幅宽）</th>
-            <th>则（作业）</th>
-            <th>强度</th>
-            <th>样本量</th>
+            <th>若（幅宽）<span class="en">If (width)</span></th>
+            <th>则（作业）<span class="en">Then (op)</span></th>
+            <th>强度<span class="en">Strength</span></th>
+            <th>样本量<span class="en">Support</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr class="hi"><td>1.3 / 1.95 / 2.6 米</td><td>播种</td><td>100%</td><td>763 + 184 + 368</td></tr>
-          <tr class="hi"><td>≥ 7.0 米</td><td>植保</td><td>100%</td><td>457（全部植保）</td></tr>
-          <tr class="hi"><td>4.55 / 5.85 米</td><td>收获</td><td>≈100%</td><td>573 + 405</td></tr>
-          <tr class="hi"><td>3.3 米</td><td>深松</td><td>98%</td><td>253</td></tr>
-          <tr class="hi"><td>单次面积 &gt; 500 亩</td><td>植保</td><td>100%</td><td>仅植保出现超大单</td></tr>
-          <tr><td>3.25 / 3.9 / 5.2 米</td><td>深松 或 收获</td><td>需月份消歧</td><td>两季共用档位</td></tr>
+          <tr class="hi">
+            <td>1.3 / 1.95 / 2.6 米<span class="en">1.3 / 1.95 / 2.6 m</span></td>
+            <td>播种<span class="en">Seeding</span></td>
+            <td>100%</td>
+            <td>763 + 184 + 368</td>
+          </tr>
+          <tr class="hi">
+            <td>≥ 7.0 米<span class="en">≥ 7.0 m</span></td>
+            <td>植保<span class="en">Plant protection</span></td>
+            <td>100%</td>
+            <td>457（全部植保）<span class="en">457 (all spray)</span></td>
+          </tr>
+          <tr class="hi">
+            <td>4.55 / 5.85 米<span class="en">4.55 / 5.85 m</span></td>
+            <td>收获<span class="en">Harvest</span></td>
+            <td>≈100%</td>
+            <td>573 + 405</td>
+          </tr>
+          <tr class="hi">
+            <td>3.3 米<span class="en">3.3 m</span></td>
+            <td>深松<span class="en">Deep tillage</span></td>
+            <td>98%</td>
+            <td>253</td>
+          </tr>
+          <tr class="hi">
+            <td>单次面积 &gt; 500 亩<span class="en">Single job area &gt; 500 mu</span></td>
+            <td>植保<span class="en">Plant protection</span></td>
+            <td>100%</td>
+            <td>仅植保出现超大单<span class="en">Only spray has huge jobs</span></td>
+          </tr>
+          <tr>
+            <td>3.25 / 3.9 / 5.2 米<span class="en">3.25 / 3.9 / 5.2 m</span></td>
+            <td>深松 或 收获<span class="en">Deep tillage or harvest</span></td>
+            <td>需月份消歧<span class="en">Need month to disambiguate</span></td>
+            <td>两季共用档位<span class="en">Shared across seasons</span></td>
+          </tr>
         </tbody>
       </table>
     </div>
     <div class="callout warn">
-      <div class="t">注意</div>
+      <div class="t">注意 <span class="en-inline">/ Note</span></div>
       同一设备编号跨播种与收获时，众数幅宽 <b>14/14 台全部不同</b>。
       说明 DEVICE_SN 更像主机/终端 ID，挂接农具会换；幅宽才代表当前机具。
+      <span class="en">When the same DEVICE_SN appears in both seeding and harvest, modal WIDTH differs on <b>14/14 devices</b>. DEVICE_SN is more like a tractor/terminal ID; implements are swapped. WIDTH represents the current tool.</span>
     </div>
 
-    <h2 id="time">时间链条（同设备 × 同乡镇）</h2>
+    <h2 id="time">
+      时间链条（同设备 × 同乡镇）
+      <span class="en">Time chains (same device × same town)</span>
+    </h2>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>若</th>
-            <th>则</th>
-            <th>顺序成立</th>
-            <th>中位间隔</th>
+            <th>若<span class="en">If</span></th>
+            <th>则<span class="en">Then</span></th>
+            <th>顺序成立<span class="en">Order holds</span></th>
+            <th>中位间隔<span class="en">Median lag</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr class="hi"><td>做过播种</td><td>其后深松</td><td>95%</td><td>约 30 天</td></tr>
-          <tr class="hi"><td>做过播种</td><td>其后植保</td><td>100%</td><td>约 30 天</td></tr>
-          <tr class="hi"><td>做过播种</td><td>其后收获</td><td>100%</td><td>约 152 天</td></tr>
-          <tr class="hi"><td>做过深松</td><td>其后收获</td><td>100%</td><td>约 110 天</td></tr>
-          <tr class="hi"><td>做过植保</td><td>其后收获</td><td>100%</td><td>约 95 天</td></tr>
-          <tr><td>月份 4–5</td><td>作业≈播种</td><td>强</td><td>5 月占播种 90%</td></tr>
-          <tr><td>月份 9–11</td><td>作业=收获</td><td>强</td><td>10 月占收获 61%</td></tr>
+          <tr class="hi">
+            <td>做过播种<span class="en">Did seeding</span></td>
+            <td>其后深松<span class="en">Then deep tillage</span></td>
+            <td>95%</td>
+            <td>约 30 天<span class="en">~30 days</span></td>
+          </tr>
+          <tr class="hi">
+            <td>做过播种<span class="en">Did seeding</span></td>
+            <td>其后植保<span class="en">Then plant protection</span></td>
+            <td>100%</td>
+            <td>约 30 天<span class="en">~30 days</span></td>
+          </tr>
+          <tr class="hi">
+            <td>做过播种<span class="en">Did seeding</span></td>
+            <td>其后收获<span class="en">Then harvest</span></td>
+            <td>100%</td>
+            <td>约 152 天<span class="en">~152 days</span></td>
+          </tr>
+          <tr class="hi">
+            <td>做过深松<span class="en">Did deep tillage</span></td>
+            <td>其后收获<span class="en">Then harvest</span></td>
+            <td>100%</td>
+            <td>约 110 天<span class="en">~110 days</span></td>
+          </tr>
+          <tr class="hi">
+            <td>做过植保<span class="en">Did plant protection</span></td>
+            <td>其后收获<span class="en">Then harvest</span></td>
+            <td>100%</td>
+            <td>约 95 天<span class="en">~95 days</span></td>
+          </tr>
+          <tr>
+            <td>月份 4–5<span class="en">Month Apr–May</span></td>
+            <td>作业≈播种<span class="en">Op ≈ seeding</span></td>
+            <td>强<span class="en">Strong</span></td>
+            <td>5 月占播种 90%<span class="en">May = 90% of seeding</span></td>
+          </tr>
+          <tr>
+            <td>月份 9–11<span class="en">Month Sep–Nov</span></td>
+            <td>作业=收获<span class="en">Op = harvest</span></td>
+            <td>强<span class="en">Strong</span></td>
+            <td>10 月占收获 61%<span class="en">Oct = 61% of harvest</span></td>
+          </tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout note">
-      <div class="t">意外：深松在播种之后</div>
+      <div class="t">意外：深松在播种之后 <span class="en-inline">/ Surprise: deep tillage after seeding</span></div>
       常见预期是「深松→播种」（播前整地）。数据里播种多在 5 月结束，深松在 6–7 月——
       这里是季中中耕/出苗后深松。植保与深松在 6 月重叠，不是严格先后。
+      <span class="en">Naive expectation is deep tillage → seeding (pre-plant prep). In the data, seeding mostly ends in May, deep tillage runs Jun–Jul — mid-season / post-emergence loosening. Spray and deep tillage overlap in June; not a strict before/after pair.</span>
     </div>
 
-    <h3>设备级典型链条</h3>
+    <h3>设备级典型链条 <span class="en-inline">/ Typical device-level chains</span></h3>
     <div class="rules">
-      <div class="rule">播种 → 深松 → 收获 <span class="detail">12 台设备的标准链</span></div>
-      <div class="rule">播种 → 植保 → 收获 <span class="detail">部分设备（少深松）</span></div>
-      <div class="rule">播种 → 植保 → 深松 → 收获 <span class="detail">完整四段，如 060302 / 060330 / 061687</span></div>
-      <div class="rule">植保 → 收获（无播种记录） <span class="detail">1 台 060722：专项喷雾+代收</span></div>
-      <div class="rule">播种 → 深松（无收获） <span class="detail">2 台：季中中断或未收录秋收</span></div>
+      <div class="rule">播种 → 深松 → 收获 <span class="en-inline">/ Seed → deep → harvest</span><span class="detail">12 台设备的标准链 · Standard chain on 12 devices</span></div>
+      <div class="rule">播种 → 植保 → 收获 <span class="en-inline">/ Seed → spray → harvest</span><span class="detail">部分设备（少深松） · Some devices (little deep tillage)</span></div>
+      <div class="rule">播种 → 植保 → 深松 → 收获 <span class="en-inline">/ Seed → spray → deep → harvest</span><span class="detail">完整四段，如 060302 / 060330 / 061687 · Full four-stage chain</span></div>
+      <div class="rule">植保 → 收获（无播种记录） <span class="en-inline">/ Spray → harvest (no seeding)</span><span class="detail">1 台 060722：专项喷雾+代收 · Device 060722: spray + custom harvest</span></div>
+      <div class="rule">播种 → 深松（无收获） <span class="en-inline">/ Seed → deep (no harvest)</span><span class="detail">2 台：季中中断或未收录秋收 · 2 devices: mid-season stop or missing harvest logs</span></div>
     </div>
 
-    <h2 id="space">空间共现（同设备 · ≈1 公里）</h2>
+    <h2 id="space">
+      空间共现（同设备 · ≈1 公里）
+      <span class="en">Spatial co-occurrence (same device · ≈1 km)</span>
+    </h2>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>若</th>
-            <th>则</th>
-            <th>比例</th>
+            <th>若<span class="en">If</span></th>
+            <th>则<span class="en">Then</span></th>
+            <th>比例<span class="en">Rate</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr class="hi"><td>同设备做过播种，且有收获记录</td><td>该播种作业附近有收获轨迹</td><td>76%（855/1128）</td></tr>
-          <tr class="hi"><td>同设备做过播种，且有深松记录</td><td>该播种作业附近有深松轨迹</td><td>76%（1091/1430）</td></tr>
-          <tr class="hi"><td>同设备做过播种，且有植保记录</td><td>该播种作业附近有植保轨迹</td><td>78%（369/471）</td></tr>
-          <tr class="hi"><td>同设备做过植保，且有收获记录</td><td>该植保作业附近有收获轨迹</td><td>84%（365/433，最高）</td></tr>
-          <tr><td>约 1km 网格内有播种</td><td>同格有收获 / 深松 / 植保</td><td>74% / 67% / 35%</td></tr>
+          <tr class="hi">
+            <td>同设备做过播种，且有收获记录<span class="en">Same device seeded &amp; has harvest</span></td>
+            <td>该播种作业附近有收获轨迹<span class="en">Nearby harvest track for that seed job</span></td>
+            <td>76%（855/1128）</td>
+          </tr>
+          <tr class="hi">
+            <td>同设备做过播种，且有深松记录<span class="en">Same device seeded &amp; has deep tillage</span></td>
+            <td>该播种作业附近有深松轨迹<span class="en">Nearby deep-tillage track</span></td>
+            <td>76%（1091/1430）</td>
+          </tr>
+          <tr class="hi">
+            <td>同设备做过播种，且有植保记录<span class="en">Same device seeded &amp; has spray</span></td>
+            <td>该播种作业附近有植保轨迹<span class="en">Nearby spray track</span></td>
+            <td>78%（369/471）</td>
+          </tr>
+          <tr class="hi">
+            <td>同设备做过植保，且有收获记录<span class="en">Same device sprayed &amp; has harvest</span></td>
+            <td>该植保作业附近有收获轨迹<span class="en">Nearby harvest track</span></td>
+            <td>84%（365/433，最高）<span class="en">84% (highest)</span></td>
+          </tr>
+          <tr>
+            <td>约 1km 网格内有播种<span class="en">~1 km cell has seeding</span></td>
+            <td>同格有收获 / 深松 / 植保<span class="en">Same cell has harvest / deep / spray</span></td>
+            <td>74% / 67% / 35%</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <h2 id="id">身份与组织结构</h2>
+    <h2 id="id">
+      身份与组织结构
+      <span class="en">Identity &amp; organization structure</span>
+    </h2>
     <div class="stats">
-      <div class="stat ok"><div class="v">1:1</div><div class="l">设备 → 机手</div></div>
-      <div class="stat ok"><div class="v">1:1</div><div class="l">机手 → 电话</div></div>
-      <div class="stat"><div class="v">10</div><div class="l">张志坚名下设备</div></div>
-      <div class="stat"><div class="v">14/14</div><div class="l">跨季换挂具幅宽</div></div>
+      <div class="stat ok"><div class="v">1:1</div><div class="l">设备 → 机手<span class="en">Device → operator</span></div></div>
+      <div class="stat ok"><div class="v">1:1</div><div class="l">机手 → 电话<span class="en">Operator → phone</span></div></div>
+      <div class="stat"><div class="v">10</div><div class="l">张志坚名下设备<span class="en">Devices under Zhang Zhijian</span></div></div>
+      <div class="stat"><div class="v">14/14</div><div class="l">跨季换挂具幅宽<span class="en">WIDTH changes across seasons</span></div></div>
     </div>
 
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>若</th>
-            <th>则</th>
-            <th>强度</th>
-            <th>含义</th>
+            <th>若<span class="en">If</span></th>
+            <th>则<span class="en">Then</span></th>
+            <th>强度<span class="en">Strength</span></th>
+            <th>含义<span class="en">Meaning</span></th>
           </tr>
         </thead>
         <tbody>
           <tr class="hi">
-            <td>机手 ≠ 张志坚</td>
-            <td>整季只有 1 台设备</td>
+            <td>机手 ≠ 张志坚<span class="en">Operator ≠ Zhang Zhijian</span></td>
+            <td>整季只有 1 台设备<span class="en">Exactly 1 device all season</span></td>
             <td>10/10</td>
-            <td>单机单人硬绑定</td>
+            <td>单机单人硬绑定<span class="en">Hard 1-machine–1-person bind</span></td>
           </tr>
           <tr class="hi">
-            <td>机手 = 张志坚</td>
-            <td>10 台设备、跨 5 乡镇</td>
+            <td>机手 = 张志坚<span class="en">Operator = Zhang Zhijian</span></td>
+            <td>10 台设备、跨 5 乡镇<span class="en">10 devices across 5 towns</span></td>
             <td>n=2,290</td>
-            <td>机队/调度账号特征</td>
+            <td>机队/调度账号特征<span class="en">Fleet / dispatcher account</span></td>
           </tr>
           <tr class="hi">
-            <td>设备做过深松</td>
-            <td>同设备做过播种</td>
+            <td>设备做过深松<span class="en">Device did deep tillage</span></td>
+            <td>同设备做过播种<span class="en">Same device also seeded</span></td>
             <td>100%（15/15）</td>
-            <td>深松设备来自播种机队</td>
+            <td>深松设备来自播种机队<span class="en">Deep-tillage units from seed fleet</span></td>
           </tr>
           <tr class="hi">
-            <td>乡镇有植保</td>
-            <td>同乡镇有播种+深松+收获</td>
+            <td>乡镇有植保<span class="en">Town has plant protection</span></td>
+            <td>同乡镇有播种+深松+收获<span class="en">Also has seed+deep+harvest</span></td>
             <td>5/5</td>
-            <td>有植保 = 全流程乡镇</td>
+            <td>有植保 = 全流程乡镇<span class="en">Spray ⇒ full-pipeline town</span></td>
           </tr>
           <tr class="hi">
-            <td>乡镇有深松</td>
-            <td>同乡镇有播种</td>
+            <td>乡镇有深松<span class="en">Town has deep tillage</span></td>
+            <td>同乡镇有播种<span class="en">Also has seeding</span></td>
             <td>100%（8/8）</td>
-            <td>反向：播种→深松仅 80%</td>
+            <td>反向：播种→深松仅 80%<span class="en">Reverse seed→deep only 80%</span></td>
           </tr>
           <tr class="hi">
-            <td>乡镇播种面积 ≥ 1000 亩</td>
-            <td>必有收获，收/播中位 ≈ 1.82</td>
+            <td>乡镇播种面积 ≥ 1000 亩<span class="en">Town seed area ≥ 1000 mu</span></td>
+            <td>必有收获，收/播中位 ≈ 1.82<span class="en">Must have harvest; har/sow median ≈ 1.82</span></td>
             <td>6/6</td>
-            <td>主产区稳定比例</td>
+            <td>主产区稳定比例<span class="en">Stable ratio in core areas</span></td>
           </tr>
           <tr>
-            <td>乡镇无播种仅有收获</td>
-            <td>代收目的地</td>
-            <td>4 镇</td>
-            <td>汉古尔河、莽格吐、大河湾、长山</td>
+            <td>乡镇无播种仅有收获<span class="en">Town has harvest only (no seed)</span></td>
+            <td>代收目的地<span class="en">Custom-harvest destination</span></td>
+            <td>4 镇<span class="en">4 towns</span></td>
+            <td>汉古尔河、莽格吐、大河湾、长山<span class="en">Hanguerhe, Manggetu, Dahewan, Changshan</span></td>
           </tr>
           <tr>
-            <td>同设备收获/播种面积比 &gt; 3</td>
-            <td>大量代收档案外地块</td>
-            <td>7/14 台</td>
-            <td>如 060420 比值达 23 倍</td>
+            <td>同设备收获/播种面积比 &gt; 3<span class="en">Device har/sow area ratio &gt; 3</span></td>
+            <td>大量代收档案外地块<span class="en">Heavy custom harvest outside logged seed</span></td>
+            <td>7/14 台<span class="en">7/14 devices</span></td>
+            <td>如 060420 比值达 23 倍<span class="en">e.g. 060420 ratio ≈ 23×</span></td>
           </tr>
           <tr>
-            <td>组织 = 保农农场</td>
-            <td>主要服务七棵树/中兴/长山</td>
+            <td>组织 = 保农农场<span class="en">Org = Baonong Farm</span></td>
+            <td>主要服务七棵树/中兴/长山<span class="en">Mainly Qikeshu / Zhongxing / Changshan</span></td>
             <td>n=1,145</td>
-            <td>组织与服务范围绑定</td>
+            <td>组织与服务范围绑定<span class="en">Org bound to service range</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <h2>乡镇作业完整度</h2>
+    <h2 id="towns">
+      乡镇作业完整度
+      <span class="en">Town-level ops completeness</span>
+    </h2>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>地点</th>
-            <th class="num">播种</th>
-            <th class="num">深松</th>
-            <th class="num">植保</th>
-            <th class="num">收获</th>
-            <th class="num">收/播比</th>
-            <th>模式</th>
+            <th>地点<span class="en">Place</span></th>
+            <th class="num">播种<span class="en">Seed</span></th>
+            <th class="num">深松<span class="en">Deep</span></th>
+            <th class="num">植保<span class="en">Spray</span></th>
+            <th class="num">收获<span class="en">Harvest</span></th>
+            <th class="num">收/播比<span class="en">Har/sow</span></th>
+            <th>模式<span class="en">Pattern</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>中兴乡</td><td class="num">7976</td><td class="num">5043</td><td class="num">24644</td><td class="num">14530</td><td class="num">1.82</td><td>全流程</td></tr>
-          <tr><td>宝山乡</td><td class="num">6965</td><td class="num">1669</td><td class="num">11353</td><td class="num">13241</td><td class="num">1.90</td><td>全流程</td></tr>
-          <tr><td>平阳镇</td><td class="num">4089</td><td class="num">2994</td><td class="num">—</td><td class="num">6047</td><td class="num">1.48</td><td>无植保</td></tr>
-          <tr><td>兴隆乡</td><td class="num">1724</td><td class="num">3917</td><td class="num">1285</td><td class="num">5822</td><td class="num">3.38</td><td>全流程</td></tr>
-          <tr><td>甘南镇</td><td class="num">2037</td><td class="num">2469</td><td class="num">1847</td><td class="num">1105</td><td class="num">0.54</td><td>全流程</td></tr>
-          <tr><td>兴十四镇</td><td class="num">1831</td><td class="num">754</td><td class="num">—</td><td class="num">3336</td><td class="num">1.82</td><td>无植保</td></tr>
-          <tr><td>汉古尔河镇</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1076</td><td class="num">—</td><td>仅收获</td></tr>
-          <tr><td>莽格吐达斡尔族乡</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1503</td><td class="num">—</td><td>仅收获</td></tr>
+          <tr><td>中兴乡<span class="en">Zhongxing</span></td><td class="num">7976</td><td class="num">5043</td><td class="num">24644</td><td class="num">14530</td><td class="num">1.82</td><td>全流程<span class="en">Full pipeline</span></td></tr>
+          <tr><td>宝山乡<span class="en">Baoshan</span></td><td class="num">6965</td><td class="num">1669</td><td class="num">11353</td><td class="num">13241</td><td class="num">1.90</td><td>全流程<span class="en">Full pipeline</span></td></tr>
+          <tr><td>平阳镇<span class="en">Pingyang</span></td><td class="num">4089</td><td class="num">2994</td><td class="num">—</td><td class="num">6047</td><td class="num">1.48</td><td>无植保<span class="en">No spray</span></td></tr>
+          <tr><td>兴隆乡<span class="en">Xinglong</span></td><td class="num">1724</td><td class="num">3917</td><td class="num">1285</td><td class="num">5822</td><td class="num">3.38</td><td>全流程<span class="en">Full pipeline</span></td></tr>
+          <tr><td>甘南镇<span class="en">Gannan Town</span></td><td class="num">2037</td><td class="num">2469</td><td class="num">1847</td><td class="num">1105</td><td class="num">0.54</td><td>全流程<span class="en">Full pipeline</span></td></tr>
+          <tr><td>兴十四镇<span class="en">Xingshisi</span></td><td class="num">1831</td><td class="num">754</td><td class="num">—</td><td class="num">3336</td><td class="num">1.82</td><td>无植保<span class="en">No spray</span></td></tr>
+          <tr><td>汉古尔河镇<span class="en">Hanguerhe</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1076</td><td class="num">—</td><td>仅收获<span class="en">Harvest-only</span></td></tr>
+          <tr><td>莽格吐达斡尔族乡<span class="en">Manggetu</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">1503</td><td class="num">—</td><td>仅收获<span class="en">Harvest-only</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="caption">面积单位：亩。核心乡镇跑全流程；部分乡镇仅为代收目的地。</p>
+    <p class="caption">面积单位：亩。核心乡镇跑全流程；部分乡镇仅为代收目的地。<span class="en">Area in mu. Core towns run the full pipeline; some towns are harvest-service destinations only.</span></p>
 
-    <h2 id="deeper2">更深发现二：负荷集中、空窗期与组织分工</h2>
+    <h2 id="deeper2">
+      更深发现二：负荷集中、空窗期与组织分工
+      <span class="en">Deeper round 2: load concentration, silent window &amp; org roles</span>
+    </h2>
     <p class="meta" style="margin-bottom:0">
       在季节流水线与幅宽指纹之外，逐条重算轨迹后浮现的三类更深模式：作业量高度集中在少数设备、
       生长期存在一段完全静默的空窗、以及两家组织在作业结构与人员绑定上的系统性差异。
+      <span class="en">Beyond the seasonal pipeline and width fingerprint, three deeper patterns: workload concentrated on a few devices, a fully silent growth-season window, and systematic org differences in job mix and staff binding.</span>
     </p>
 
     <div class="callout warn">
-      <div class="t">意外：56 天完全静默的生长期空窗</div>
+      <div class="t">意外：56 天完全静默的生长期空窗 <span class="en-inline">/ Surprise: 56-day silent growth window</span></div>
       逐日统计 5,802 条记录后，<b>8月1日至9月25日（连续 56 天）没有任何一条作业记录</b>——
       横跨全部四类作业、全部 20 台设备。这正是深松/植保收尾（约7月22日）到收获开始（9月26日）
       之间的作物生长期：档案系统在这段窗口里完全「沉默」，说明数据只记录机具下地作业，不含巡田等其他活动。
+      <span class="en">After daily tally of all 5,802 jobs, <b>Aug 1 – Sep 25 (56 consecutive days) has zero records</b> — across all four ops and all 20 devices. This is the crop growth window between mid-season work ending (~Jul 22) and harvest starting (Sep 26). The archive is fully silent here: it logs machine field work only, not scouting or other activities.</span>
     </div>
 
     <div class="contrast">
       <div class="box hi">
         <div class="big">40%</div>
-        <div class="lbl">面积份额来自面积最高的 3 台设备（占 20 台的 15%）</div>
+        <div class="lbl">面积份额来自面积最高的 3 台设备（占 20 台的 15%）<span class="en">Area share from top 3 devices (15% of fleet)</span></div>
       </div>
       <div class="box hi">
         <div class="big">54%</div>
-        <div class="lbl">面积份额来自面积最高的 5 台设备（占 20 台的 25%）</div>
+        <div class="lbl">面积份额来自面积最高的 5 台设备（占 20 台的 25%）<span class="en">Area share from top 5 devices (25% of fleet)</span></div>
       </div>
     </div>
-    <p class="caption">按设备汇总全年（四类作业合计）面积后排序。作业量并非 20 台平均分摊，头部设备承担了机队的主要负荷。</p>
+    <p class="caption">按设备汇总全年（四类作业合计）面积后排序。作业量并非 20 台平均分摊，头部设备承担了机队的主要负荷。<span class="en">Devices ranked by full-season area (all four ops). Workload is not evenly split — head devices carry most of the fleet load.</span></p>
 
-    <h3>组织作业结构对比</h3>
+    <h3>组织作业结构对比 <span class="en-inline">/ Org job-mix comparison</span></h3>
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>组织</th><th class="num">播种占比</th><th class="num">收获占比</th><th class="num">植保占比</th><th class="num">深松占比</th></tr>
+          <tr>
+            <th>组织<span class="en">Organization</span></th>
+            <th class="num">播种占比<span class="en">Seed %</span></th>
+            <th class="num">收获占比<span class="en">Harvest %</span></th>
+            <th class="num">植保占比<span class="en">Spray %</span></th>
+            <th class="num">深松占比<span class="en">Deep %</span></th>
+          </tr>
         </thead>
         <tbody>
-          <tr class="hi"><td>齐齐哈尔农垦金丰公社（甘南分公司）</td><td class="num">19.2%</td><td class="num">35.8%</td><td class="num">32.4%</td><td class="num">12.6%</td></tr>
-          <tr class="hi"><td>甘南县保农种植家庭农场</td><td class="num">17.8%</td><td class="num">49.1%</td><td class="num">16.7%</td><td class="num">16.5%</td></tr>
+          <tr class="hi">
+            <td>齐齐哈尔农垦金丰公社（甘南分公司）<span class="en">Jinfeng Commune (Gannan branch)</span></td>
+            <td class="num">19.2%</td><td class="num">35.8%</td><td class="num">32.4%</td><td class="num">12.6%</td>
+          </tr>
+          <tr class="hi">
+            <td>甘南县保农种植家庭农场<span class="en">Baonong Family Farm</span></td>
+            <td class="num">17.8%</td><td class="num">49.1%</td><td class="num">16.7%</td><td class="num">16.5%</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <p class="caption">占比按各组织全年作业面积计算。金丰公社的植保面积占比约为保农农场的两倍；保农农场近半面积集中在收获，更偏代耕代收型服务。</p>
+    <p class="caption">占比按各组织全年作业面积计算。金丰公社的植保面积占比约为保农农场的两倍；保农农场近半面积集中在收获，更偏代耕代收型服务。<span class="en">Shares by each org’s full-season area. Jinfeng’s spray share is roughly 2× Baonong; Baonong puts nearly half its area into harvest — more custom-farming oriented.</span></p>
 
-    <h3>乡镇标签的空间语义：服务片区 vs 代收点</h3>
+    <h3>乡镇标签的空间语义：服务片区 vs 代收点 <span class="en-inline">/ Spatial meaning of town labels: service zone vs harvest spot</span></h3>
     <div class="table-scroll">
       <table>
         <thead>
-          <tr><th>乡镇</th><th class="num">经度跨度</th><th class="num">纬度跨度</th><th>角色</th></tr>
+          <tr>
+            <th>乡镇<span class="en">Town</span></th>
+            <th class="num">经度跨度<span class="en">Lon span</span></th>
+            <th class="num">纬度跨度<span class="en">Lat span</span></th>
+            <th>角色<span class="en">Role</span></th>
+          </tr>
         </thead>
         <tbody>
-          <tr class="hi"><td>中兴乡</td><td class="num">31.7 km</td><td class="num">23.4 km</td><td>全流程核心区（多地块拼合）</td></tr>
-          <tr class="hi"><td>宝山乡</td><td class="num">17.5 km</td><td class="num">27.1 km</td><td>全流程核心区</td></tr>
-          <tr class="hi"><td>甘南镇</td><td class="num">18.5 km</td><td class="num">18.6 km</td><td>全流程核心区</td></tr>
-          <tr><td>汉古尔河镇</td><td class="num">5.9 km</td><td class="num">3.4 km</td><td>纯收获代收点</td></tr>
-          <tr><td>长山乡</td><td class="num">5.7 km</td><td class="num">2.9 km</td><td>纯收获代收点</td></tr>
-          <tr><td>大河湾镇</td><td class="num">2.6 km</td><td class="num">2.7 km</td><td>纯收获代收点</td></tr>
+          <tr class="hi"><td>中兴乡<span class="en">Zhongxing</span></td><td class="num">31.7 km</td><td class="num">23.4 km</td><td>全流程核心区（多地块拼合）<span class="en">Full-pipeline core (multi-parcel mosaic)</span></td></tr>
+          <tr class="hi"><td>宝山乡<span class="en">Baoshan</span></td><td class="num">17.5 km</td><td class="num">27.1 km</td><td>全流程核心区<span class="en">Full-pipeline core</span></td></tr>
+          <tr class="hi"><td>甘南镇<span class="en">Gannan Town</span></td><td class="num">18.5 km</td><td class="num">18.6 km</td><td>全流程核心区<span class="en">Full-pipeline core</span></td></tr>
+          <tr><td>汉古尔河镇<span class="en">Hanguerhe</span></td><td class="num">5.9 km</td><td class="num">3.4 km</td><td>纯收获代收点<span class="en">Harvest-only custom spot</span></td></tr>
+          <tr><td>长山乡<span class="en">Changshan</span></td><td class="num">5.7 km</td><td class="num">2.9 km</td><td>纯收获代收点<span class="en">Harvest-only custom spot</span></td></tr>
+          <tr><td>大河湾镇<span class="en">Dahewan</span></td><td class="num">2.6 km</td><td class="num">2.7 km</td><td>纯收获代收点<span class="en">Harvest-only custom spot</span></td></tr>
         </tbody>
       </table>
     </div>
     <p class="caption">
       中兴乡的轨迹跨度达 31.7×23.4 公里，远超单个行政村范围，说明 VILLAGE 字段实际是「服务片区」标签，
       而非精确地块行政边界；相比之下纯收获乡镇的轨迹高度收拢在几公里内，符合单点代收特征。
+      <span class="en">Zhongxing tracks span 31.7×23.4 km — far beyond a single administrative village — so VILLAGE is a “service-zone” label, not exact parcel boundaries. Harvest-only towns collapse to a few km — consistent with single-point custom harvest.</span>
     </p>
 
-    <h3>设备生命周期：常驻机队 vs 临时机具</h3>
-    <p style="margin:0 0 6px">按首末作业日期跨度看，20 台设备明显分两类。</p>
+    <h3>设备生命周期：常驻机队 vs 临时机具 <span class="en-inline">/ Device lifecycle: resident fleet vs temporary units</span></h3>
+    <p style="margin:0 0 6px">
+      按首末作业日期跨度看，20 台设备明显分两类。
+      <span class="en">By first–last job span, the 20 devices split into two clear classes.</span>
+    </p>
     <div class="rules">
       <div class="rule">
-        18 台设备跨季作业 <span class="detail">活跃跨度 139–205 天，覆盖播种到收获的多个环节，是机队主力</span>
+        18 台设备跨季作业 <span class="en-inline">/ 18 devices work across seasons</span>
+        <span class="detail">活跃跨度 139–205 天，覆盖播种到收获的多个环节，是机队主力 · Active span 139–205 days; covers multiple stages from seed to harvest — core fleet</span>
       </div>
       <div class="rule">
-        2 台设备仅短暂出现（均属张志坚名下） <span class="detail">
+        2 台设备仅短暂出现（均属张志坚名下） <span class="en-inline">/ 2 devices appear briefly (both under Zhang Zhijian)</span>
+        <span class="detail">
         010901060723：5月1日–16日（15天），仅播种；010901060724：5月16日–17日（1天），仅播种，此后再未出现——
-        符合播种高峰期临时调入/租赁机具的特征</span>
+        符合播种高峰期临时调入/租赁机具的特征
+        <span class="en">010901060723: May 1–16 (15 days), seeding only; 010901060724: May 16–17 (1 day), seeding only, then gone — fits temporary / leased units for the seeding peak</span>
+        </span>
       </div>
     </div>
 
-    <h2>面积与幅宽实际含义</h2>
+    <h2>
+      面积与幅宽实际含义
+      <span class="en">What AREA and WIDTH actually mean</span>
+    </h2>
     <div class="pair">
       <div class="card">
-        <h3>面积 ≈ 0.8 × 轨迹长度 × 幅宽</h3>
+        <h3>面积 ≈ 0.8 × 轨迹长度 × 幅宽<span class="en">AREA ≈ 0.8 × path length × WIDTH</span></h3>
         <p style="margin:0">
           面积与 GPS 点数相关 0.86–0.96；相对「轨迹×幅宽」的中位比值约 0.8
           （重叠/效率折减）。面积是作业覆盖量，不是地籍亩数。
+          <span class="en">AREA correlates 0.86–0.96 with GPS point count; median ratio vs path×width ≈ 0.8 (overlap / efficiency). AREA is work coverage, not cadastre acreage.</span>
         </p>
       </div>
       <div class="card">
-        <h3>幅宽 ≈ 机具类型</h3>
+        <h3>幅宽 ≈ 机具类型<span class="en">WIDTH ≈ implement class</span></h3>
         <p style="margin:0">
           播种 1.3–4.4 米；深松多为 3.25/3.3 米；收获 3.25–5.85 米；喷雾 7.8–23.4 米。
           宽幅几乎只做植保。
+          <span class="en">Seeders 1.3–4.4 m; deep tillage mostly 3.25/3.3 m; harvesters 3.25–5.85 m; spray 7.8–23.4 m. Wide implements are almost only plant protection.</span>
         </p>
       </div>
     </div>
 
-    <h2 id="quick">实用「若 → 则」速查</h2>
+    <h2 id="quick">
+      实用「若 → 则」速查
+      <span class="en">Practical if → then quick reference</span>
+    </h2>
     <div class="rules">
-      <div class="rule"><b>若</b> 1km 网格内有播种又有深松 → <b>则</b> 同网格很可能有收获（≈90%，无深松时≈43%）。</div>
-      <div class="rule"><b>若</b> 网格有深松或植保 → <b>则</b> 几乎必有先前播种（≈90%）。</div>
-      <div class="rule"><b>若</b> 幅宽 ≥ 7 米 → <b>则</b> 作业一定是植保。</div>
-      <div class="rule"><b>若</b> 幅宽为 1.3 / 1.95 / 2.6 米 → <b>则</b> 作业一定是播种。</div>
-      <div class="rule"><b>若</b> 同一编号跨播种与收获 → <b>则</b> 挂具幅宽已更换（14/14）。</div>
-      <div class="rule"><b>若</b> 月份在 4–5 月 → <b>则</b> 作业几乎一定是播种。</div>
-      <div class="rule"><b>若</b> 月份在 6–7 月 → <b>则</b> 作业为植保或深松。</div>
-      <div class="rule"><b>若</b> 月份在 9–11 月 → <b>则</b> 作业为收获。</div>
-      <div class="rule"><b>若</b> 播种后约 30 天 → <b>则</b> 同设备同乡镇进入深松/植保窗口。</div>
-      <div class="rule"><b>若</b> 播种后约 5 个月 → <b>则</b> 同设备同乡镇进入收获（中位 152 天）。</div>
-      <div class="rule"><b>若</b> 乡镇有植保 → <b>则</b> 该乡镇具备播种+深松+收获全流程。</div>
-      <div class="rule"><b>若</b> 机手不是张志坚 → <b>则</b> 整季只绑定一台设备。</div>
-      <div class="rule"><b>若</b> 同设备收/播面积比 &gt; 3 → <b>则</b> 视为外向型代收为主。</div>
-      <div class="rule"><b>若</b> 乡镇仅有收获 → <b>则</b> 视为代收/跨区服务目的地。</div>
-      <div class="rule"><b>若</b> 日期落在 8 月1日–9月25日 → <b>则</b> 档案中无任何作业记录（56天生长期空窗）。</div>
-      <div class="rule"><b>若</b> 设备属于全季面积前 5 名（共20台）→ <b>则</b> 这 5 台合计完成全季 54% 的作业面积。</div>
-      <div class="rule"><b>若</b> 组织为金丰公社 → <b>则</b> 植保面积占比≈32%，约为保农农场（17%）的两倍。</div>
-      <div class="rule"><b>若</b> 同设备同作业类型 → <b>则</b> 幅宽整季几乎恒定（54/56 组仅一个档位）。</div>
-      <div class="rule"><b>若</b> 机手确定 → <b>则</b> 所属组织唯一，两家组织人员互不交叉（11人 11机构，0 交叉）。</div>
-      <div class="rule"><b>若</b> 乡镇轨迹跨度仅几公里 → <b>则</b> 多为纯收获代收点；跨度达十余到三十余公里 → 为多地块拼合的全流程服务片区。</div>
+      <div class="rule"><b>若 / If</b> 1km 网格内有播种又有深松 → <b>则 / then</b> 同网格很可能有收获（≈90%，无深松时≈43%）。<span class="en">Cell has seed+deep → likely harvest (~90%; ~43% without deep).</span></div>
+      <div class="rule"><b>若 / If</b> 网格有深松或植保 → <b>则 / then</b> 几乎必有先前播种（≈90%）。<span class="en">Cell has deep/spray → prior seeding almost sure (~90%).</span></div>
+      <div class="rule"><b>若 / If</b> 幅宽 ≥ 7 米 → <b>则 / then</b> 作业一定是植保。<span class="en">WIDTH ≥ 7 m → plant protection (deterministic).</span></div>
+      <div class="rule"><b>若 / If</b> 幅宽为 1.3 / 1.95 / 2.6 米 → <b>则 / then</b> 作业一定是播种。<span class="en">WIDTH ∈ {1.3, 1.95, 2.6} → seeding.</span></div>
+      <div class="rule"><b>若 / If</b> 同一编号跨播种与收获 → <b>则 / then</b> 挂具幅宽已更换（14/14）。<span class="en">Same SN across seed &amp; harvest → WIDTH changed (14/14).</span></div>
+      <div class="rule"><b>若 / If</b> 月份在 4–5 月 → <b>则 / then</b> 作业几乎一定是播种。<span class="en">Month Apr–May → op almost surely seeding.</span></div>
+      <div class="rule"><b>若 / If</b> 月份在 6–7 月 → <b>则 / then</b> 作业为植保或深松。<span class="en">Month Jun–Jul → spray or deep tillage.</span></div>
+      <div class="rule"><b>若 / If</b> 月份在 9–11 月 → <b>则 / then</b> 作业为收获。<span class="en">Month Sep–Nov → harvest.</span></div>
+      <div class="rule"><b>若 / If</b> 播种后约 30 天 → <b>则 / then</b> 同设备同乡镇进入深松/植保窗口。<span class="en">~30 days after seeding → deep/spray window (same device×town).</span></div>
+      <div class="rule"><b>若 / If</b> 播种后约 5 个月 → <b>则 / then</b> 同设备同乡镇进入收获（中位 152 天）。<span class="en">~5 months after seeding → harvest (median 152 days).</span></div>
+      <div class="rule"><b>若 / If</b> 乡镇有植保 → <b>则 / then</b> 该乡镇具备播种+深松+收获全流程。<span class="en">Town has spray → full seed+deep+harvest pipeline.</span></div>
+      <div class="rule"><b>若 / If</b> 机手不是张志坚 → <b>则 / then</b> 整季只绑定一台设备。<span class="en">Operator ≠ Zhang → exactly one device all season.</span></div>
+      <div class="rule"><b>若 / If</b> 同设备收/播面积比 &gt; 3 → <b>则 / then</b> 视为外向型代收为主。<span class="en">Device har/sow &gt; 3 → treat as outward custom harvest.</span></div>
+      <div class="rule"><b>若 / If</b> 乡镇仅有收获 → <b>则 / then</b> 视为代收/跨区服务目的地。<span class="en">Harvest-only town → custom / cross-area service destination.</span></div>
+      <div class="rule"><b>若 / If</b> 日期落在 8 月1日–9月25日 → <b>则 / then</b> 档案中无任何作业记录（56天生长期空窗）。<span class="en">Date in Aug 1–Sep 25 → zero jobs (56-day growth silent window).</span></div>
+      <div class="rule"><b>若 / If</b> 设备属于全季面积前 5 名（共20台）→ <b>则 / then</b> 这 5 台合计完成全季 54% 的作业面积。<span class="en">Device in top-5 by season area → those 5 do 54% of all area.</span></div>
+      <div class="rule"><b>若 / If</b> 组织为金丰公社 → <b>则 / then</b> 植保面积占比≈32%，约为保农农场（17%）的两倍。<span class="en">Org = Jinfeng → spray area share ≈32%, ~2× Baonong (17%).</span></div>
+      <div class="rule"><b>若 / If</b> 同设备同作业类型 → <b>则 / then</b> 幅宽整季几乎恒定（54/56 组仅一个档位）。<span class="en">Same device + same op → WIDTH nearly constant (54/56 groups single bin).</span></div>
+      <div class="rule"><b>若 / If</b> 机手确定 → <b>则 / then</b> 所属组织唯一，两家组织人员互不交叉（11人 11机构，0 交叉）。<span class="en">Operator known → unique org; no staff overlap between the two orgs.</span></div>
+      <div class="rule"><b>若 / If</b> 乡镇轨迹跨度仅几公里 → <b>则 / then</b> 多为纯收获代收点；跨度达十余到三十余公里 → 为多地块拼合的全流程服务片区。<span class="en">Town track span only a few km → mostly harvest-only spot; span of 10–30+ km → multi-parcel full-pipeline service zone.</span></div>
     </div>
 
     <div class="callout note">
-      <div class="t">注意事项</div>
+      <div class="t">注意事项 <span class="en-inline">/ Caveats</span></div>
       以上为观测关联（含时间顺序与空间共现），不是实验室因果。
       共有设备上收获上报面积约为播种的 2.4 倍；空间匹配约 76%–84%，但不是地块 ID 一一对应——
       只有轨迹中心点。3.25 / 3.9 / 5.2 米幅宽需结合月份区分深松与收获。
+      <span class="en">These are observational associations (with timing and spatial structure), not lab causality. On shared devices, reported harvest area is ~2.4× seeding; spatial match is ~76–84% but not 1:1 parcel IDs — we only have track centroids. WIDTH 3.25 / 3.9 / 5.2 m needs month to separate deep tillage from harvest.</span>
     </div>
 
     <p class="foot">
       组织：齐齐哈尔农垦金丰公社农业服务有限公司甘南分公司（主体）+ 甘南县保农种植家庭农场 ·
-      基于 Archieve/*.shp 逐条轨迹重算 · 含空窗期、负荷集中度、组织分工等第二轮深层若则规则更新
+      基于 Archieve/*.shp 逐条轨迹重算 · 含空窗期、负荷集中度、组织分工等第二轮深层若则规则 · 中英双语
+      <span class="en">Orgs: Qiqihar Nongken Jinfeng Commune Ag Service Co. Gannan Branch (main) + Gannan Baonong Planting Family Farm · Recalculated from Archieve/*.shp tracks · Includes silent-window, load concentration, org-role rules · Bilingual ZH/EN</span>
     </p>
   </main>
 
   <script>
-    const months = ["4月", "5月", "6月", "7月", "9月", "10月", "11月"];
+    const months = ["4月 Apr", "5月 May", "6月 Jun", "7月 Jul", "9月 Sep", "10月 Oct", "11月 Nov"];
     const colors = {
-      播种: "#1f6b4a",
-      植保: "#1e4f7a",
-      深松: "#9a5b12",
-      收获: "#6b3fa0",
+      seed: "#1f6b4a",
+      spray: "#1e4f7a",
+      deep: "#9a5b12",
+      harvest: "#6b3fa0",
     };
 
     const common = {
@@ -748,7 +927,7 @@
       scales: {
         x: {
           grid: { display: false },
-          ticks: { font: { size: 11 }, color: "#6b655c" },
+          ticks: { font: { size: 10 }, color: "#6b655c", maxRotation: 0 },
         },
         y: {
           beginAtZero: true,
@@ -763,22 +942,34 @@
       data: {
         labels: months,
         datasets: [
-          { label: "播种", data: [161, 1610, 15, 0, 0, 0, 0], backgroundColor: colors.播种 },
-          { label: "植保", data: [0, 0, 407, 50, 0, 0, 0], backgroundColor: colors.植保 },
-          { label: "深松", data: [0, 0, 1063, 63, 0, 0, 0], backgroundColor: colors.深松 },
-          { label: "收获", data: [0, 0, 0, 0, 45, 1478, 910], backgroundColor: colors.收获 },
+          { label: "播种 Seeding", data: [161, 1610, 15, 0, 0, 0, 0], backgroundColor: colors.seed },
+          { label: "植保 Spray", data: [0, 0, 407, 50, 0, 0, 0], backgroundColor: colors.spray },
+          { label: "深松 Deep", data: [0, 0, 1063, 63, 0, 0, 0], backgroundColor: colors.deep },
+          { label: "收获 Harvest", data: [0, 0, 0, 0, 45, 1478, 910], backgroundColor: colors.harvest },
         ],
       },
       options: {
         ...common,
         plugins: {
           ...common.plugins,
-          title: { display: true, text: "各月作业次数", font: { size: 13 }, color: "#1c1a16", padding: { bottom: 8 } },
+          title: {
+            display: true,
+            text: "各月作业次数 / Monthly job counts",
+            font: { size: 13 },
+            color: "#1c1a16",
+            padding: { bottom: 8 },
+          },
         },
         scales: {
           ...common.scales,
-          y: { ...common.scales.y, title: { display: true, text: "次数", font: { size: 11 }, color: "#6b655c" } },
-          x: { ...common.scales.x, title: { display: true, text: "月份", font: { size: 11 }, color: "#6b655c" } },
+          y: {
+            ...common.scales.y,
+            title: { display: true, text: "次数 / Jobs", font: { size: 11 }, color: "#6b655c" },
+          },
+          x: {
+            ...common.scales.x,
+            title: { display: true, text: "月份 / Month", font: { size: 11 }, color: "#6b655c" },
+          },
         },
       },
     });
@@ -788,22 +979,34 @@
       data: {
         labels: months,
         datasets: [
-          { label: "播种面积", data: [2161, 22503, 181, 0, 0, 0, 0], backgroundColor: colors.播种 },
-          { label: "植保面积", data: [0, 0, 28839, 10839, 0, 0, 0], backgroundColor: colors.植保 },
-          { label: "深松面积", data: [0, 0, 14866, 2260, 0, 0, 0], backgroundColor: colors.深松 },
-          { label: "收获面积", data: [0, 0, 0, 0, 1784, 32902, 14255], backgroundColor: colors.收获 },
+          { label: "播种面积 Seed area", data: [2161, 22503, 181, 0, 0, 0, 0], backgroundColor: colors.seed },
+          { label: "植保面积 Spray area", data: [0, 0, 28839, 10839, 0, 0, 0], backgroundColor: colors.spray },
+          { label: "深松面积 Deep area", data: [0, 0, 14866, 2260, 0, 0, 0], backgroundColor: colors.deep },
+          { label: "收获面积 Harvest area", data: [0, 0, 0, 0, 1784, 32902, 14255], backgroundColor: colors.harvest },
         ],
       },
       options: {
         ...common,
         plugins: {
           ...common.plugins,
-          title: { display: true, text: "各月作业面积（亩）", font: { size: 13 }, color: "#1c1a16", padding: { bottom: 8 } },
+          title: {
+            display: true,
+            text: "各月作业面积（亩） / Monthly area (mu)",
+            font: { size: 13 },
+            color: "#1c1a16",
+            padding: { bottom: 8 },
+          },
         },
         scales: {
           ...common.scales,
-          y: { ...common.scales.y, title: { display: true, text: "亩", font: { size: 11 }, color: "#6b655c" } },
-          x: { ...common.scales.x, title: { display: true, text: "月份", font: { size: 11 }, color: "#6b655c" } },
+          y: {
+            ...common.scales.y,
+            title: { display: true, text: "亩 / mu", font: { size: 11 }, color: "#6b655c" },
+          },
+          x: {
+            ...common.scales.x,
+            title: { display: true, text: "月份 / Month", font: { size: 11 }, color: "#6b655c" },
+          },
         },
       },
     });
